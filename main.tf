@@ -22,21 +22,17 @@ module "static_site" {
   }
 }
 
-# Use the `aws_s3_object` instead of `aws_s3_bucket_object`
 resource "aws_s3_object" "index" {
   bucket       = module.static_site.bucket_name  # Reference to the bucket created in the module
   key          = "index.html"
   source       = "${path.module}/website/index.html"
-  acl          = "public-read"
   content_type = "text/html"
 }
 
-# Similarly, use `aws_s3_object` for error.html
 resource "aws_s3_object" "error" {
   bucket       = module.static_site.bucket_name  # Reference to the bucket created in the module
   key          = "error.html"
   content      = "<h1>404 - Not Found</h1>"
-  acl          = "public-read"
   content_type = "text/html"
 }
 

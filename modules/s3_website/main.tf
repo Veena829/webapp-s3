@@ -1,10 +1,13 @@
-resource "aws_s3_bucket" "this" {
-  bucket = var.bucket_name
 
-  tags = var.tags
+resource "random_id" "bucket_suffix" {
+  byte_length = 8
 }
 
-# Create the website configuration for the S3 bucket
+resource "aws_s3_bucket" "this" {
+  bucket = "your-unique-bucket-name-${random_id.bucket_suffix.hex}"
+  tags   = var.tags
+}
+
 resource "aws_s3_bucket_website_configuration" "this" {
   bucket = aws_s3_bucket.this.id
 
@@ -17,7 +20,6 @@ resource "aws_s3_bucket_website_configuration" "this" {
   }
 }
 
-# Updated S3 Bucket Policy to allow public read access to all objects in the bucket
 resource "aws_s3_bucket_policy" "this" {
   bucket = aws_s3_bucket.this.bucket
 
@@ -32,7 +34,6 @@ resource "aws_s3_bucket_policy" "this" {
   })
 }
 
-# Updated S3 Bucket Public Access Block to allow public access for the website
 resource "aws_s3_bucket_public_access_block" "this" {
   bucket = aws_s3_bucket.this.bucket
 
